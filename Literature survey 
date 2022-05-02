@@ -1,0 +1,425 @@
+Formal methods in ML - Shared Doc
+
+Chat from meeting on 10.01.2022 (To read):
+
+Sara Mohammadinejad, Brandon Paulsen, Jyotirmoy V. Deshmukh, Chao Wang: DiffRNN: Differential Verification of Recurrent Neural Networks. FORMATS 2021: 117-134 
+
+Anand Balakrishnan, Jyotirmoy Deshmukh, Bardh Hoxha, Tomoya Yamaguchi, Georgios Fainekos: PerceMon: Online Monitoring for Perception Systems. RV 2021: 297-308 
+
+Anand Balakrishnan, Aniruddh Gopinath Puranic, Xin Qin, Adel Dokhanchi, Jyotirmoy V. Deshmukh, Heni Ben Amor, Georgios Fainekos: Specifying and Evaluating Quality Metrics for Vision-based Perception Systems. DATE 2019: 1433-1438 
+
+Luan Viet Nguyen, James Kapinski, Xiaoqing Jin, Jyotirmoy V. Deshmukh, Taylor T. Johnson: Hyperproperties of real-valued signals. MEMOCODE 2017: 104-113 
+               https://dblp.org/pid/96/11505.html 
+
+Automated Safety Verification of Programs Invoking Neural Networks 
+
+Cumhur Erkan Tuncali, Georgios Fainekos, Danil V. Prokhorov, Hisahiro Ito, James Kapinski: Requirements-Driven Test Generation for Autonomous Vehicles With Machine Learning Components. IEEE Trans. Intel I. Veh. 5(2): 265-280 (2020) 
+
+Mohammad Hekmatnejad, Bardh Hoxha, Georgios Fainekos: Search-based Test-Case Generation by Monitoring Responsibility Safety Rules. CoRR abs/2005.00326 (2020)
+
+
+
+
+
+
+
+
+Authors
+Purpose
+Brief description
+Type of NN
+Underlying formalism
+Type of solver used 
+1
+Introduction to Neural Network Verification (Book)
+	
+Aws Albarghouthi 
+It serves as an introduction to NNs and their verification 
+It describes representation of NNs as data-flow graphs. It then talks about constraint-based and abstraction-based techniques for NNs
+Feed-forward DNNs
+-
+-
+2
+ReLUPLEX
+Guy Katz et al
+Framework for verifying DNNs involving ReLUs. 
+The simplex algorithm for solving LP instances is extended to support ReLU constraints by incrementally satisfying constraints that they impose
+DNNs with ReLUs - 8 layers, 300 ReLU nodes
+ReLU constraints represented as linear programs, and solved incrementally by using bound tightening on variables involved 
+SMT solver
+3
+DiffRNN
+Jyotirmoy Deshmukh et al
+To certify equivalence of two structurally similar neural networks
+DiffRNN pairs neurons and edges of first network with second, and directly computes difference intervals layer-by-layer.
+Vanilla RNN, LSTM
+Bounding nonlinear activation functions with linear constraints, solving constrained optimization problems to compute tight bounding boxes on non-linear surfaces ( 
+Interval analysis)
+dReal SMT solver used to prove soundness of bounding boxes
+4
+NeuroSPF
+Muhammad Usman et al
+Symbolic analysis of NNs 
+It builds on Symbolic Path Finder (SPF) for Java programs. Therefore, it translates NN to Java and then runs SPF on it.
+Feed-forward DNN specified in Keras
+Symbolic analysis, execution
+-
+5
+Automated Safety Verification of programs invoking NNs
+Maria Christakis et al
+Verifying safety of a heterogeneous systems that use NNs
+Two-way integration of C-program and NN analysis.
+-
+Abstract interpretation
+-
+6
+Safety verification of deep neural networks
+Xiaowei Huang et al
+Automated verification of NNs based on SMT
+Adversarial perturbations targeted
+It checks for point-wise robustness by exhaustively searching the region (within a specified diameter) around point(s), where all the points in the region are supposed to be in the same class. It verifies layer-by-layer, until either a misclassification is found or it is guaranteed that no misclassification is present. 
+Feed-forward, multilayer NN
+Search based recursive verification.
+
+Targets point-wise robustness
+Z3
+		
+
+
+7
+Simulation-based Adversarial Test Generation for Autonomous Vehicles with Machine Learning Components 
+Cumhur Erkan Tancali (Toyota Research)
+Simulation based test
+
+
+Autonomous system with DNN
+i.Global Uniform Random Search, 
+
+ii.Covering arrays and uniform random search, 
+
+iii.Covering arrays and simulated annealing
+-
+8
+Search-based Test-Case Generation by Monitoring Responsibility Safety Rules
+	Mohammad Hekmatnejad 
+Using monitoring and falsification to generate qualified test cases
+Responsibility Sensitive Safety (RSS) rules are used as qualifier specifications to filter out the random tests that do not satisfy the RSS assumption. The remaining tests cover driving scenarios that the controlled vehicle does not respond safely to its environment.
+Simulated driving scenarios
+A requirement guided search on simulated driving scenarios.
+
+
+
+
+
+9
+DeepConcolic
+Xiaowei Huang et al
+It uses concolic testing (i.e. concrete execution + symbolic analysis) to explore execution paths.
+Start with concrete execution of a random test input, t. If t is close to satisfying a requirement, apply symbolic analysis to obtain a new test input t’ that satisfies the requirement. Iterate until a satisfactory level of coverage achieved. 
+Feed-forward DNN
+Concolic testing
+Coverage criteria: Lipschitz coverage(~structural coverage), MC/DC, neuron boundary coverage, neuron coverage (~ statement coverage)
+(Fragment of Quantified Linear Arithmetic over rationals used to express coverage requirements)
+The formula resulting from the symbolically encoded execution path is solved by a constraint solver.
+TensorFuzz
+Coverage guided fuzzing for DNNs
+
+
+
+
+
+
+
+
+
+
+
+
+*DNNV
+David Shriver et al
+A framework to facilitate the application, development, and comparison of DNN verifiers 
+DNNV standardizes input and output formats, property specification (using DSL), provides simplification and reduction operations to facilitate the application, development, and comparison of DNN verifiers. This also helps increase the support of ML verifiers for existing benchmarks.
+*Hyperproperties of Real-Valued Signals 
+Jyotirmoy Deshmukh
+A testing technique that allows to check or falsify hyperproperties of CPS models.  
+				
+			
+		
+
+
+STL is extended to HyperSTL in order to represent hyperproperties.
+They specify and falsify HyperSTL properties for two case studies involving automotive control systems (with no ML components)
+
+________________________________________________________________________________________________________________
+
+                            Gray-box monitoring of hyperproperties
+				
+
+
+
+
+
+Runtime verification (RV) is concerned with 
+(1) generating a monitor from a formal specification φ, and 
+(2) using the monitor to detect whether or not φ holds by observing events generated by the system at run time. 
+
+Monitorability - possibility of monitoring a property. Some properties non-monitorable because no finite observation can lead to a conclusive verdict.
+A formula φ is (semantically) monitorable if every observation O has an extended observation P ≽ O, such that P |=s φ or P |=v φ.			s- satisfies; v- violates
+
+∀π.∀π.(aπ ↔ ¬aπ′ ) is monitorable, but ∀π.∃π.(aπ ↔ ¬aπ′ ) is not, as it requires an observation set of infinite size
+
+A formula φ is seman-tically gray-box monitorable for a system S if every observation O has an extended observation P ≽O in S, such that P |=sS φ or P |=vS φ.
+
+Given a property φ and a set of behaviors S, a monitor M is sound whenever, for every observation O ∈ O,
+1. ifO|=sS φ,thenM(O)=⊤orM(O)=?, 
+2. ifO|=vS φ,thenM(O)=⊥orM(O)=?, 
+3. otherwise M(O) = ?
+
+Given a property φ and a set of traces S, a monitor M is perfect whenever, for every observation O ∈ O,
+1. ifO|=sS φthenM(O)=⊤, 
+2. ifO|=vS φthenM(O)=⊥, 
+3. otherwise M(O) = ?.
+
+A property φ is strongly monitorable for a system S if there is a sound monitor M s.t. for all observations O ∈ O, there is an extended observation P ∈ S for which either M(P) = ⊤ or M(P) = ⊥
+
+if a property is not semantically monitorable, then it is not strongly monitorable but in rich domains, some semantically monitorable properties may not be strongly monitorable
+
+If φ is strongly monitorable, then φ is semantically monitorable.
+strongly monitorable => semantically monitorable
+!semantically monitorable => !semantically monitorable
+
+we propose to use a combination of static analysis and runtime verification to monitor violations of ∀+∃+ properties (or dually, satisfactions of ∃+∀+). The main idea is to collect candidates for the outer ∃ part dynamically and use static analysis at runtime to over-approximate the inner ∀ quantifiers.
+
+
+(P1) DDM is not semantically black-box monitorable,
+(P2) DDM is semantically white-box monitorable (for programs that are not DDM),
+(P3) checking DDM statically is undecidable,
+(P4) DDM is strongly gray-box monitorable for violation, and we give a sound monitor.
+
+The static analyzer receives the finite observation O collected by the monitor, but not the future system behavior. Instead it must reason under the assumption that any system behavior in S that is compatible with O, may eventually occur.For example, given an ∃∀ formula, the outer existential quantifier is instantiated with a concrete set U of runtime traces, while possible extensions of U provided by static analysis can be used to instantiate the inner universal quantifier.
+
+Given a function f : I → O, the problem of data minimization consists in finding a preprocessor function p: I → I, such that f = f ◦p and p = p◦p. The goal of p is to limit the information available to f while preserving the behavior of f
+
+For f : I → O with finite I , φdm is strongly monitorable in Sf . If I is infinite, then φdm is not semantically monitorable for satisfaction, but we can still hope to build a sound monitor for violation of φdm.
+
+
+________________________________________________________________________________________________________________
+
+Explaining Image Classifiers using Statistical Fault Localization (Explainable AI)
+
+a black-box explanation technique based on statistical fault localization.
+
+static fault localisation based on local perturbations
+
+a good explanation gives an answer to the question
+“why did this outcome occur
+
+ An explanation in image classification is a minimal subset of pixels of a given input image that is sufficient for the DNN to classify the image, where “sufficient” is defined as containing only this subset of pixels from the original image, with the other pixels set to the background colour.
+
+
+"cowboy hat”image. Although Xception labels the input image correctly, an explanation produced by DeepCover indicates that this decision is not based on the correct feature (the hat in the image), but on the face, which is an unexpected feature for the label ‘cowboy hat’. While this image was not, technically speaking, misclassified, the explanation points to a flaw in the DNN’s reasoning. 
+The explanations generated by DeepCover may thus be useful for assessing the adequacy of the DNN training: they allow us to check, whether the DNN is aligned with the developer’s intent during training.
+a DNN is “trojaned” if it behaves correctly on ordinary input images but exhibits malicious behavior when a “Trojan trigger” is part of the input.
+
+
+________________________________________________________________________________________________________________
+
+Seshia, Sanjit A., et al. "Formal specification for deep neural networks." International Symposium on Automated Technology for Verification and Analysis. Springer, Cham, 2018.
+
+
+Global robustness:
+1)
+x: fixed input       𝛿: perturbation        β: fixed bound      
+μ: cost function defined on the perturbations, typically a distance metric based on a norm (L1,L2,or L∞)
+
+∀x. ∀δ. ¬φ(δ)
+ where ¬φ(δ) is : [μ(δ) < β ∧ δ ∈ Δ] ⇒ [fw(x + δ) ∉ T(x)]
+
+constraint fw (x + δ) ∉ T (x) ensures that the output of the NN to the perturbed input does not lie in the adversary’s target output set T(x) ((which can be a function of x, e.g., Y \ {y} where y is the correct label))
+
+2)
+∀x1,x2. [μ(x1 − x2) < β ∧ (x1 −x2) ∈ Δ]⇒ [fw(x1) ≈ fw(x2)]
+
+DNN outputs a similar answer on all pairs of inputs (x1,x2) that are “close”; where “≈” is a suitably-defined notion of similarity between outputs of the DNN.
+
+
+Ruan, Wenjie, et al. "Global robustness evaluation of deep neural networks with provable guarantees for the hamming distance." IJCAI, 2019.
+-global robustness - defined as the expected maximum safe radius (using Hamming distance) over a (finite) test dataset, which is a generalisation of the local, pointwise robustness problem 
+-generate sequences of lower and upper bounds for global robustness
+-global robustness aims to capture the worst case local robustness (worst case maximal safety radius)
+-quantifies the size of the perturbation that the system can withstand for a set of inputs, instead of just a single input
+-bounds are computed by iteratively applying perturbations for every input until a misclassification occurs. GPU parallelisation used.
+
+
+Fairness: 
+Albarghouthi, Aws, et al. "Fairness as a program property." arXiv preprint arXiv:1610.06067 (2016).
+
+- defined for decision-making systems
+- output should not be influenced by certain sensitive attributes of input
+
+specify pre-condition on inputs say age ~ gauss(18,5) // the age has a gaussian distribution
+
+and a post-condition:
+
+i) Individual/Similarity-based fairness: Similar inputs mapped to similar outputs
+    Pr [hire(v) ≠ hire(v') | v ~ v'] < ϵ
+
+ii) Group fairness: Probability of getting a particular output is independent of the values of sensitive input attributes (similar to non-interference)
+
+    e.g. the algorithm is just as likely to hire a minority applicant as a non-minority applicant
+    
+    Pr[hire(v) = true | v = minority]
+    -------------------------------    > 1 - ϵ
+    Pr[hire(v) = true | v ≠ minority]    
+
+    An output value of true implies hired.
+
+proving program fair boils down to statically checking whether on inputs satisfying pre-condition, outcome      satisfies post-condition
+ 
+
+ Friedler, Sorelle A., Carlos Scheidegger, and Suresh Venkatasubramanian. "On the (im) possibility of fairness." arXiv preprint arXiv:1609.07236 (2016).
+
+ Fix two thresholds ϵ, ϵ'. Then f is (ϵ, ϵ')-fair if for any x,y ϵ P
+    distance (x,y) ≤ ϵ ⇒ distance (f(x), f(y)) ≤ ϵ'
+
+ Group fairness: Pr[hire = yes | majority = 1] - Pr[hire = yes | majority = 0]
+                This is called the discrimination score and the goal is to bring it close to zero.
+
+________________________________________________________________________________________________________________
+
+Gray-box monitoring of hyper-properties 
+- hyper-property: Distributed data minimization
+
+combination of static analysis and runtime verification used to monitor violations of ∀+∃+ properties
+-collect candidates for ∃ part dynamically and use static analysis at runtime to over-approximate the ∀ quantifiers
+
+(∀ is replaced by conjunctions over finite set of input traces; ∃ replaced by a single quantifier ranging over all input traces)
+extract predicate (say, φ) from system under observation using symbolic execution  -> extend it to FOL formulas over sets of observed traces ( φ(x,y) holds?) -> check the result using Z3
+
+________________________________________________________________________________________________________________
+
+Explainable AI - 
+Sun, Youcheng, et al. "Explaining image classifiers using statistical fault localization." European Conference on Computer Vision. Springer, Cham, 2020.
+
+-Use static fault localisation to rank input features (pixels)
+-Explanation in image classification is the minimal subset of pixels of input image that is sufficient for DNN to classify the image
+
+-Given an input image x classified by DNN as y, generate random mutations of x (by masking pixels which are not of interest with background colour)
+-Annotate them with y or ~y depending on the output generated by DNN
+-Rank the pixels 
+-Construct an explanation by iteratively adding pixels in descending prder of rank until set becomes sufficient for DNN to classify the image
+
+Other techniques:
+- finding contribution scores of neurons to final output
+-gradient-based algorithms need one backward pass
+-sample neighbourhood of the input and create a linear model to approximate model's local behaviour
+-measure flow of information between inputs and outputs to estimate importance of input features
+
+________________________________________________________________________________________________________________
+
+To do:
+
+1. Put input into cost function in definition 1
+    ∀x. ∀δ. ¬φ(δ)
+ where ¬φ(δ) is : [μ(δ) < β ∧ δ ∈ Δ] ⇒ [fw(x + δ) ∉ T(x)]
+
+2. Relation between confidence of NN amd perturbation/input
+
+3. Put input into cost function in definition 2
+    ∀x1,x2. [μ(x1 − x2) < β ∧ (x1 −x2) ∈ Δ]⇒ [fw(x1) ≈ fw(x2)]
+
+Xu, Huan, and Shie Mannor. "Robustness and generalization." Machine learning 86.3 (2012): 391-423.
+
+   - If testing sample close to training sample, then testing error close to training error. 
+   - Partition the sample set into finite subsets s.t. if a new sample falls into the same subset as a training     sample, then the loss of former is close to loss of latter. 
+ (loss -> generalization errornof learning algorithm)
+
+Wu, Xi, et al. "Reinforcing adversarial robustness using model confidence induced by adversarial training." International conference on machine learning. PMLR, 2018. 
+
+- combines confidence information and nearest neighbour search to embed low confidence point back to high confidence regions
+
+    adversary draws x(input) ->  produces x' = x + Δ  ->  sends x' to defender  ->  defender outputs label l
+     if C(x) = C(x'), defense succeeds
+    considers nearby points (specified by allowable perturbations)
+
+    try to find a point around x which has high confidence prediction and is near to x
+    arg min |z - x|   s.t z ∈ N(x,ξ)
+      subject to ||F (z)||∞ ≥ p
+    N(x,ξ) is the ξ-ball around x w.r.t. ||.||
+
+
+∀x. ∀δ. ¬φ(δ)
+ where ¬φ(δ) is : [μ(δ) < β ∧ δ ∈ Δ] ⇒ [fw(x + δ) ∉ T(x)]
+
+conf(f(x)): confidence of NN on input x
+
+Robustness:
+∀ x, x’, ε>0. ∃ δ>0. |x-x’| <= δ and ⇒ |f(x)-f(x’)| <= ε
+
+Robustness + confidence:
+∀ x, x’, ε>0. ∃ δ>0. |x-x’| <= δ and conf(f(x)) > k ⇒ |f(x)-f(x’)| <= ε
+
+∀ x, x’, ε>0. ∃ δ>0. |x-x’| <= δ ⇒ w(conf(f(x)))*|f(x)-f(x’)| <= ε
+
+X - set of inputs
+L - set of output labels
+
+f : X -> [1,0]^|L|
+For all x, f(x) = (c1; …, c_|L|) implies that c1 + .. + c_|L| = 1 and c_i >= 0 
+
+∀ x, x’, ε>0. ∃ δ>0. |x-x’| <= δ ⇒ |f(x)-f(x’)| <= ε
+
+_____________________________________________________________________________________________________
+
+1.Robustness and confidence (reachability vs hyperproperty)
+2.Parameter synthesis
+3.Maria: Look for instantiations that hold with high probability (e.g., above a threshold)?
+4.Static analysis of 2-safety in DNNs 
+5.Combining 2-safety for systems and DNNs (Maria’s work on reachability lifted to 2-safety)
+6.Combine static and dynamic analysis
+7.Multi-view specifications (interface theory, conjunction)
+
+_____________________________________________________________________________________________________
+
+- Tensorflow/PyTorch
+- Gradient descent/ascent
+- Create adversarial example FGSM on a smaill MNIST - Tensorflow
+- Optimizer - fine tune NN parasmeters
+- ADAM, RMSProp
+- activation functions
+- train an MNIST NN
+- www.deeplearningbook.org - chapters: 6, 11, 12
+- deepxplore - neuron coverage paper
+_____________________________________________________________________________________________________
+
+robustness (with confidence) definition in DSL:
+    pre-condition: 
+        {x' = differ (x, 𝛿)}  where c = differ(a, b) means c and a differ by distance b 
+
+    post-condition:
+        {conf(f(x)) > k ⇒ f(x') = differ(f(x), ε)}
+
+
+
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
