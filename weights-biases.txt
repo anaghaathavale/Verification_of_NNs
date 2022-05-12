@@ -1,0 +1,36 @@
+
+Configuration:
+{'name': 'dense', 'trainable': True, 'batch_input_shape': (None, 4), 'dtype': 'float32', 'units': 3, 'activation': 'relu', 'use_bias': True, 'kernel_initializer': {'class_name': 'GlorotUniform', 'config': {'seed': None}}, 'bias_initializer': {'class_name': 'Zeros', 'config': {}}, 'kernel_regularizer': None, 'bias_regularizer': None, 'activity_regularizer': None, 'kernel_constraint': None, 'bias_constraint': None}
+
+Weights:
+[[-0.13855237 -0.48340127 -0.06019723]
+ [-0.74152243  0.3512234   0.71496   ]
+ [-0.24940747  0.6955513   0.598015  ]
+ [-0.5712788  -0.36392862 -0.15997969]]
+
+Biases:
+[ 0.         -0.04987533 -0.04632338]
+
+Configuration:
+{'name': 'dense_1', 'trainable': True, 'dtype': 'float32', 'units': 5, 'activation': 'relu', 'use_bias': True, 'kernel_initializer': {'class_name': 'GlorotUniform', 'config': {'seed': None}}, 'bias_initializer': {'class_name': 'Zeros', 'config': {}}, 'kernel_regularizer': None, 'bias_regularizer': None, 'activity_regularizer': None, 'kernel_constraint': None, 'bias_constraint': None}
+
+Weights:
+[[ 0.7239391  -0.6191232   0.5864989   0.46640903  0.77708954]
+ [-0.02420092 -0.11126709  0.312904    0.6354949  -0.3560783 ]
+ [-0.297243   -0.51251996  0.5105599   0.42014894  0.29740256]]
+
+Biases:
+[ 0.          0.         -0.04725202 -0.0475334   0.04878432]
+
+Configuration:
+{'name': 'dense_2', 'trainable': True, 'dtype': 'float32', 'units': 3, 'activation': 'softmax', 'use_bias': True, 'kernel_initializer': {'class_name': 'GlorotUniform', 'config': {'seed': None}}, 'bias_initializer': {'class_name': 'Zeros', 'config': {}}, 'kernel_regularizer': None, 'bias_regularizer': None, 'activity_regularizer': None, 'kernel_constraint': None, 'bias_constraint': None}
+
+Weights:
+[[-0.13430512 -0.6648346  -0.44665852]
+ [ 0.68640774  0.35837406  0.24290723]
+ [-0.60294396 -0.40841728 -0.6894462 ]
+ [ 0.56848407  0.39272398 -0.40986553]
+ [-0.60334295 -0.13262127  0.15768874]]
+
+Biases:
+[-0.0389494  -0.04971638  0.0484336 ]
