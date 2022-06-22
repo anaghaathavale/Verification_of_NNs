@@ -402,12 +402,21 @@ robustness (with confidence) definition in DSL:
 _____________________________________________________________________________________________________
 
 
+Globally Robust Networks (CMU)
 
+-Train certifiably robust neural networks 
+-Use gobal robustness definition
+-Introduce additional output class for non-trivial behaviour (for points abrbitrarily close to a decision boundary) - signals that a point can't be certified as globally robust
+ : no 2 points at distance ε form each other are labeled with different non-'additional' classes
+-deterministic guarantees on l2-bounded perturbations
+- instrument a model with an extra output, ⊥, that labels a point as “not locally-robust,” such that the instrumented model predicts a non-⊥ class only 
+if the point is locally-robust (with respect to the original model). At a high level, ensure that in order to avoid predicting
+⊥, the maximum output of f must surpass the other outputs by a sufficient margin. (While this margin is measured in the output space, we can ensure it 
+is sufficiently large to ensure local robustness by relating the output space to the input space via an upper bound on the model’s Lipschitz constant)
 
-
-
-		
-
+|fi(x1)−fi(x2)|
+---------------  ≤ Ki
+||x1−x2|| 
 
 
 
