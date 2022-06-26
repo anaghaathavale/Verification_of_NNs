@@ -403,9 +403,10 @@ ________________________________________________________________________________
 
 
 Globally Robust Networks (CMU)
-
--Train certifiably robust neural networks 
--Use gobal robustness definition
+ 
+-Train certifiably robust neural networks, 
+-Use global robustness definition 
+    use global Lipschitz bounds to train models that are certifiably robust
 -Introduce additional output class for non-trivial behaviour (for points abrbitrarily close to a decision boundary) - signals that a point can't be certified as globally robust
  : no 2 points at distance ε form each other are labeled with different non-'additional' classes
 -deterministic guarantees on l2-bounded perturbations
@@ -417,6 +418,46 @@ is sufficiently large to ensure local robustness by relating the output space to
 |fi(x1)−fi(x2)|
 ---------------  ≤ Ki
 ||x1−x2|| 
+
+-Local bound needed to be computed for every point, global can be computed in advance
+-MNIST, CIFAR-10, Tiny-Imagenet
+-Train GloRo networks to cetify robustness against l2 perturbations within ε-neighbourhood of 0.3 and 1.58 for MNIST (standard l2 norms used)
+-MinMax activations perform better than ReLU for gloro nets, so minmax used 
+-outperforms state-of-the-art in deterministic verified-robust accuracy
+-performs certification in a single forward pass, so is fast
+
+-Do not include softmax
+
+_____________________________________________________________________________________________________
+
+Learning Security Classifiers with Verified Global Robustness Properties
+
+
+
+
+
+
+
+
+
+_____________________________________________________________________________________________________
+Beyond Robustness: Resilience Verifcation of Tree-Based Classifiers
+
+-For binary decision trees
+-Resilience (generalization of robustness) in place of robustness
+-identify a subset of feature space where model predictions not changed despite adversarial manipulations
+-* a classifier is called stable  on an instance if for all adversarial manipulations of the instance, makes same prediction. 
+however stability is trivial - a classifier that always makes same predicts one class is stable! Robustness additionally requires 
+that correct prediction performed.
+- Limitation of robustness : quantified over a specific test set
+-They define robustness as : if the classifier is makes correct prediction on the test set
+-Consider all instances within L-inf distance from instance x. neighborhood of x thus represented by a small box around x.
+-Resilience requires the classifier to be robust on x while remaining stable on instances in neighbourhood of x, for which correct 
+class labels are unknown
+-compute be static analysis a sound under-approximation of the portion of feature space where classifier is stable.
+
+
+
 
 
 
