@@ -432,6 +432,21 @@ ________________________________________________________________________________
 
 Learning Security Classifiers with Verified Global Robustness Properties
 
+- a framework and tools for training classifiers that satisfy global robustness properties
+- Our algorithm trains a verifiably robust classifier: we can formally verify that F satisfies 𝜑
+- To evaluate the local robustness of a trained model, we can measure the percentage of data points
+𝑥 in the test set that satisfy 𝜑(𝑥)
+-start from a classifier without the global robustness property, use a verifier to find counter-examples that 
+violate the property, and train the classifier for one epoch guided by the counterexample.This process is repeated 
+until the classifier satisfies the property
+-The classifier is structured as an ensemble of logic rules.For example, 
+ “wasm < 0.5 ∧ web workers < 1.5 → −1.99" means that if the website does not use WebAssembly, and has at most
+ one web worker, the clause adds 𝑅_0 i.e. -1.99 to the final prediction value. Otherwise, the clause is inactive and 
+ adds nothing to the final prediction value. 0.5, 1.5 and -1.99 are learnable parameters
+ 
+ Global Robustness Property Definition:
+
+
 
 
 
