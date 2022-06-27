@@ -445,8 +445,91 @@ until the classifier satisfies the property
  adds nothing to the final prediction value. 0.5, 1.5 and -1.99 are learnable parameters
  
  Global Robustness Property Definition:
-
-
+ 
+ 1. Property 1 (Monotonicity):Given a feature 𝑗,
+    ∀𝑥,𝑥′∈ R𝑛.[𝑥𝑗 ≤ 𝑥′𝑗 ∧ (∀𝑖≠𝑗. 𝑥𝑖 = 𝑥′𝑖)] => F(𝑥) ≤ F(𝑥′)
+    This property specifies that the classifier is monotonically increasing along some feature dimension. 
+    It is useful to defend against a class of attacks that insert benign features into malicious instances
+    If we carefully choose features to be monotonic for aclassifier, injecting content into a malicious instance
+    can only make it look more malicious to the classifier, i.e., these changes can only increase 
+    classification score. 
+    
+ 2. Property 2 (Stability):Given a feature 𝑗 and a constant 𝑐,
+    ∀𝑥,𝑥′∈ R𝑛.[∀𝑖≠𝑗.𝑥𝑖 = 𝑥′𝑖] => |F(𝑥)−F(𝑥′)| ≤ 𝑐
+    for all 𝑥,𝑥′, if they only differin the 𝑗-th feature, the difference between their prediction scores is
+    bounded by a constant (Lipschitz constant) 𝑐 
+    
+ 3. Property 3 (High Confidence):Given a set of low-cost features 𝐽,
+    ∀𝑥,𝑥′∈R𝑛.[∀𝑖∉𝐽.𝑥𝑖=𝑥′𝑖]∧𝑔(F(𝑥)) ≥ 𝛿 => F(𝑥′) ≥ 0
+    The high confidence property states that, for any sample 𝑥 that is classified as malicious with high confidence 
+    (e.g.,𝛿=0.98), perturbing any low-cost feature 𝑗 ∈ 𝐽 does not change the classifier prediction from malicious to 
+    benign
+    
+ 4. Property 3a (Maximum Score Decrease): Given a set of low-cost features 𝐽,
+    ∀𝑥,𝑥′∈ R𝑛.[∀𝑖∉𝐽.𝑥𝑖 = 𝑥′𝑖] => F(𝑥)−F(𝑥′) ≤ g^(−1)(𝛿)
+    If the maximum decreaseof any classification score is bounded by g^(−1)(𝛿), then any high confidence 
+    classification score does not drop below zero
+    
+ 5. Property 4 (Redundancy): Given 𝑀 groups of low-cost features 𝐽1, 𝐽2, . . ., 𝐽𝑀
+    If the attacker perturbs multiple low-cost features, we would like the high confidence predictions from the 
+    classifier to be robust ifdifferent groups of low-cost features are not perturbed at the same time. In the 
+    redundancy property, we identify 𝑀 groups of low-cost features, and require that the attacker has to perturb at least
+    one feature from each group in order to evade a high confidence prediction
+    
+ 6. Property 5 (Small Neighborhood): Given a constant 𝑐, 
+    ∀𝑥,𝑥′∈R𝑛.𝑑(𝑥,𝑥′) ≤ 𝜖 => |F(𝑥)−F(𝑥′)| ≤ 𝑐·𝜖  
+    where 𝑑(𝑥,𝑥′)=max𝑖{|𝑥𝑖 − 𝑥′𝑖|/𝜎𝑖}
+    
+    The small neighborhood property specifies that for any two data points within a small neighborhood defined by 𝑑,
+    we want the classifier’s output to be stable. We define the neighborhood by a new distance metric 𝑑(𝑥,𝑥′) that
+    measures the largest change to anyfeature value, normalized by the standard deviation of that input feature.
+    𝑑(𝑥,𝑥′)is essentially a ℓ∞ norm, applied to normalized feature values. 
+    ** We chose not to use the ℓ∞ distance directly because different features for security classifiers often have a 
+    different scale
+    
+    
+  - We propose a new type of classification model, which we call a logic ensemble. We show how to train logic ensemble
+  classifiers that satisfy global robustness properties
+  Logic ensembles can be viewed as a generalization of decision trees
+  
+  A logic ensemble classifier F consists of a set of clauses. Each clause has the form
+  𝐵1(𝛼1,𝛽1) ∧ 𝐵2(𝛼2,𝛽2)∧···∧ 𝐵𝑚(𝛼𝑚,𝛽𝑚) → R
+  where 𝐵1. . .𝐵𝑚 are atoms and 𝑅 is the activation value of the clause
+  
+  Verification algorithm:
+  
+  - new verification algorithm that uses integer linear programming to verify the global robustness properties of 
+  logic ensembles, including trees:
+  i. encode the logic ensemble using boolean variables, adding consistency constraints amongthe boolean variables
+  ii. for each global robustness property,we symbolically represent the input and output of the classifier in terms 
+  of these boolean variables, and add extra constraints toassert that the robustness property is violated
+  iii. check feasibility of these constraints, expressing them as a 0/1 integer linear program
+  iv. gives feasible solution -> classifier does not satisfy the global robustness property -> counterexample; else 
+  satisfies prop
+ 
+- When the training algorithm terminates, if it finds a classifier, theclassifier is guaranteed to satisfy the 
+  properties. However, there is no guarantee that it will find a classifier, but empirically our algorithm can find 
+  an accurate classifier that satisfies all the specified properties 
+  
+  
+  Evaluation:
+ -Twitter Spam Accounts - collect information about Twitter spam accounts, and randomly sampled benign Twitter users. 
+ -We reimplement 15 of their proposed features, including account age, number of following, number of followers, etc 
+ -We identify 8 low-cost features in total
+ -We specify two features to be monotonically increasing, and two features to be monotonically decreasing, based on domain 
+ knowledge
+ 
+ Comparing results:
+ We compare against three types of base-line models, 
+ (1) tree ensemble and neural network that are not trained using any properties, 
+ (2) monotonic classifiers, and 
+ (3) neural network models trained with local robustness versions of our properties - lot of counter-exs found,
+ NN (DL2) models cannot obtain global robustness
+ 
+ Citation: Fischer et al. and Melacci et al. proposed global robustness properties for image classifiers using 
+ universally quantified statements. Both of their techniques smooth the logic expression of the property into a 
+ differentiable loss function, and then use PGD attacks to minimize the loss. They can train neural networks to 
+ obtain local robustness, but cannot obtain verified global robustness
 
 
 
