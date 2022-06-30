@@ -407,13 +407,15 @@ Globally Robust Networks (CMU)
 -Train certifiably robust neural networks, 
 -Use global robustness definition 
     use global Lipschitz bounds to train models that are certifiably robust
--Introduce additional output class for non-trivial behaviour (for points abrbitrarily close to a decision boundary) - signals that a point can't be certified as globally robust
- : no 2 points at distance ε form each other are labeled with different non-'additional' classes
+-Introduce additional output class for non-trivial behaviour (for points abrbitrarily close to a decision boundary) - 
+ signals that a point can't be certified as globally robust: no 2 points at distance ε form each other are labeled 
+ with different non-'additional' classes
 -deterministic guarantees on l2-bounded perturbations
-- instrument a model with an extra output, ⊥, that labels a point as “not locally-robust,” such that the instrumented model predicts a non-⊥ class only 
-if the point is locally-robust (with respect to the original model). At a high level, ensure that in order to avoid predicting
-⊥, the maximum output of f must surpass the other outputs by a sufficient margin. (While this margin is measured in the output space, we can ensure it 
-is sufficiently large to ensure local robustness by relating the output space to the input space via an upper bound on the model’s Lipschitz constant)
+-instrument a model with an extra output, ⊥, that labels a point as “not locally-robust,” such that the instrumented 
+model predicts a non-⊥ class only if the point is locally-robust (with respect to the original model). At a high level, 
+ensure that in order to avoid predicting ⊥, the maximum output of f must surpass the other outputs by a sufficient 
+margin. (While this margin is measured in the output space, we can ensure it is sufficiently large to ensure local 
+robustness by relating the output space to the input space via an upper bound on the model’s Lipschitz constant)
 
 |fi(x1)−fi(x2)|
 ---------------  ≤ Ki
@@ -421,7 +423,8 @@ is sufficiently large to ensure local robustness by relating the output space to
 
 -Local bound needed to be computed for every point, global can be computed in advance
 -MNIST, CIFAR-10, Tiny-Imagenet
--Train GloRo networks to cetify robustness against l2 perturbations within ε-neighbourhood of 0.3 and 1.58 for MNIST (standard l2 norms used)
+-Train GloRo networks to cetify robustness against l2 perturbations within ε-neighbourhood of 0.3 and 1.58 for 
+ MNIST (standard l2 norms used)
 -MinMax activations perform better than ReLU for gloro nets, so minmax used 
 -outperforms state-of-the-art in deterministic verified-robust accuracy
 -performs certification in a single forward pass, so is fast
@@ -439,42 +442,46 @@ Learning Security Classifiers with Verified Global Robustness Properties
 -start from a classifier without the global robustness property, use a verifier to find counter-examples that 
 violate the property, and train the classifier for one epoch guided by the counterexample.This process is repeated 
 until the classifier satisfies the property
--The classifier is structured as an ensemble of logic rules.For example, 
+-The classifier is structured as an ensemble of logic rules. For example, 
  “wasm < 0.5 ∧ web workers < 1.5 → −1.99" means that if the website does not use WebAssembly, and has at most
  one web worker, the clause adds 𝑅_0 i.e. -1.99 to the final prediction value. Otherwise, the clause is inactive and 
  adds nothing to the final prediction value. 0.5, 1.5 and -1.99 are learnable parameters
  
  Global Robustness Property Definition:
  
- 1. Property 1 (Monotonicity):Given a feature 𝑗,
+ 1. Property 1 (Monotonicity): Given a feature 𝑗,
     ∀𝑥,𝑥′∈ R𝑛.[𝑥𝑗 ≤ 𝑥′𝑗 ∧ (∀𝑖≠𝑗. 𝑥𝑖 = 𝑥′𝑖)] => F(𝑥) ≤ F(𝑥′)
+    
     This property specifies that the classifier is monotonically increasing along some feature dimension. 
     It is useful to defend against a class of attacks that insert benign features into malicious instances
-    If we carefully choose features to be monotonic for aclassifier, injecting content into a malicious instance
+    If we carefully choose features to be monotonic for a classifier, injecting content into a malicious instance
     can only make it look more malicious to the classifier, i.e., these changes can only increase 
     classification score. 
     
  2. Property 2 (Stability):Given a feature 𝑗 and a constant 𝑐,
     ∀𝑥,𝑥′∈ R𝑛.[∀𝑖≠𝑗.𝑥𝑖 = 𝑥′𝑖] => |F(𝑥)−F(𝑥′)| ≤ 𝑐
-    for all 𝑥,𝑥′, if they only differin the 𝑗-th feature, the difference between their prediction scores is
+    
+    for all 𝑥,𝑥′, if they only differ in the 𝑗-th feature, the difference between their prediction scores is
     bounded by a constant (Lipschitz constant) 𝑐 
     
  3. Property 3 (High Confidence):Given a set of low-cost features 𝐽,
     ∀𝑥,𝑥′∈R𝑛.[∀𝑖∉𝐽.𝑥𝑖=𝑥′𝑖]∧𝑔(F(𝑥)) ≥ 𝛿 => F(𝑥′) ≥ 0
+    
     The high confidence property states that, for any sample 𝑥 that is classified as malicious with high confidence 
     (e.g.,𝛿=0.98), perturbing any low-cost feature 𝑗 ∈ 𝐽 does not change the classifier prediction from malicious to 
     benign
     
  4. Property 3a (Maximum Score Decrease): Given a set of low-cost features 𝐽,
     ∀𝑥,𝑥′∈ R𝑛.[∀𝑖∉𝐽.𝑥𝑖 = 𝑥′𝑖] => F(𝑥)−F(𝑥′) ≤ g^(−1)(𝛿)
-    If the maximum decreaseof any classification score is bounded by g^(−1)(𝛿), then any high confidence 
+    
+    If the maximum decrease of any classification score is bounded by g^(−1)(𝛿), then any high confidence 
     classification score does not drop below zero
     
  5. Property 4 (Redundancy): Given 𝑀 groups of low-cost features 𝐽1, 𝐽2, . . ., 𝐽𝑀
     If the attacker perturbs multiple low-cost features, we would like the high confidence predictions from the 
-    classifier to be robust ifdifferent groups of low-cost features are not perturbed at the same time. In the 
-    redundancy property, we identify 𝑀 groups of low-cost features, and require that the attacker has to perturb at least
-    one feature from each group in order to evade a high confidence prediction
+    classifier to be robust if different groups of low-cost features are not perturbed at the same time. In the 
+    redundancy property, we identify 𝑀 groups of low-cost features, and require that the attacker has to perturb at 
+    least one feature from each group in order to evade a high confidence prediction
     
  6. Property 5 (Small Neighborhood): Given a constant 𝑐, 
     ∀𝑥,𝑥′∈R𝑛.𝑑(𝑥,𝑥′) ≤ 𝜖 => |F(𝑥)−F(𝑥′)| ≤ 𝑐·𝜖  
@@ -500,15 +507,15 @@ until the classifier satisfies the property
   
   - new verification algorithm that uses integer linear programming to verify the global robustness properties of 
   logic ensembles, including trees:
-  i. encode the logic ensemble using boolean variables, adding consistency constraints amongthe boolean variables
-  ii. for each global robustness property,we symbolically represent the input and output of the classifier in terms 
-  of these boolean variables, and add extra constraints toassert that the robustness property is violated
+  i. encode the logic ensemble using boolean variables, adding consistency constraints among the boolean variables
+  ii. for each global robustness property, we symbolically represent the input and output of the classifier in terms 
+  of these boolean variables, and add extra constraints to assert that the robustness property is violated
   iii. check feasibility of these constraints, expressing them as a 0/1 integer linear program
   iv. gives feasible solution -> classifier does not satisfy the global robustness property -> counterexample; else 
   satisfies prop
  
-- When the training algorithm terminates, if it finds a classifier, theclassifier is guaranteed to satisfy the 
-  properties. However, there is no guarantee that it will find a classifier, but empirically our algorithm can find 
+- When the training algorithm terminates, if it finds a classifier, the classifier is guaranteed to satisfy the 
+  properties. However, there is no guarantee that it will find a classifier, but empirically can find 
   an accurate classifier that satisfies all the specified properties 
   
   
@@ -544,15 +551,16 @@ Beyond Robustness: Resilience Verifcation of Tree-Based Classifiers
 -For binary decision trees
 -Resilience (generalization of robustness) in place of robustness
 -identify a subset of feature space where model predictions not changed despite adversarial manipulations
--* a classifier is called stable  on an instance if for all adversarial manipulations of the instance, makes same prediction. 
-however stability is trivial - a classifier that always makes same predicts one class is stable! Robustness additionally requires 
-that correct prediction performed.
+-* a classifier is called stable  on an instance if for all adversarial manipulations of the instance, makes same
+prediction. However stability is trivial - a classifier that always predicts one class is stable! Robustness 
+additionally requires that correct prediction performed.
 - Limitation of robustness : quantified over a specific test set
--They define robustness as : if the classifier is makes correct prediction on the test set
--Consider all instances within L-inf distance from instance x. neighborhood of x thus represented by a small box around x.
--Resilience requires the classifier to be robust on x while remaining stable on instances in neighbourhood of x, for which correct 
-class labels are unknown
--compute be static analysis a sound under-approximation of the portion of feature space where classifier is stable.
+-They define robustness as : if the classifier makes correct prediction on the test set
+-Consider all instances within L-inf distance from instance x. neighborhood of x thus represented by a small box around
+x.
+-Resilience requires the classifier to be robust on x while remaining stable on instances in neighbourhood of x, for 
+which correct class labels are unknown
+-compute with static analysis a sound under-approximation of the portion of feature space where classifier is stable.
 
 
 
