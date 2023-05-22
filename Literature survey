@@ -571,11 +571,11 @@ Approximated NN f'(x)
  
 Spec: forall x1, x2. |x1-x2| <= epsilon and conf(f(x1)) >= delta -> f(x) == f(x')
  
-Theorem: Let gamma be the approximation constant. Then forall x. |conf(f(x)) - conf(f'(x))| < gamma
+Theorem: Let gamma be the approximation constant. Then forall x. |conf(f(x)) - conf(f'(x))| < gamma_n
  
-Theorem: Let f and f' such that forall x. |conf(f(x)) - conf(f'(x))| < gamma. Then, we have that
+Theorem: Let f and f' such that forall x. |conf(f(x)) - conf(f'(x))| < gamma_n. Then, we have that
  
-forall x1, x2. |x1-x2| <= epsilon and conf(f'(x1)) >= delta + gamma -> f'(x1) == f'(x2)
+forall x1, x2. |x1-x2| <= epsilon and conf(f'(x1)) >= delta + gamma_n -> f'(x1) == f'(x2)
 ->
 forall x1, x2. |x1-x2| <= epsilon and conf(f(x1)) >= delta -> f(x1) == f(x2)
  
