@@ -628,8 +628,69 @@ ________________________________________________________________________________
 Adult dataset description - https://cseweb.ucsd.edu/classes/sp15/cse190-c/reports/sp15/048.pdf
 
 _____________________________________________________________________________________________________
+Metamorphic testing.
+
+Testing Neural Network Classifiers based on Metamorphic Relations
+(https://ieeexplore.ieee.org/stampPDF/getPDF.jsp?tp=&arnumber=9045800&ref=)
+
+MR1: Exchange any two rows in the training set. For the testing set, the classification result of each 
+row should be unchanged.
+
+MR2: Exchange any two of feature columns of the trainingset and the testing set, which is equivalent to 
+the symmetrical transformation of all points in the training set and the testing set with respect to 
+f(x) = kx + b(k=0). For the testing set, the classification result of each line should be unchanged.
+
+• Sample substitution
+MR3: Any two of feature columns of data in the training set and the testing set are expanded by 
+k (1 ≤ k < 10, k ∈ z) times. For the testing set, the classification result of each line should be unchanged.
+
+MR4: All points in the training set and the testing set are symmetrically transformed about y = −x . 
+For the testing set, the classification result of each line should be unchanged.
+
+MR5: Any two of feature columns of data in the training set and testing set are increased by 
+k (0 <k< 1, k ∈ R) . For the testing set, the classification result of each row should be unchanged.
+
+MR6: The points in the training set and the testing set are rotated by k (0 <k< 3.14, k ∈ R) radians 
+with the origin as the center. For the testing set, the classification result of each line should be unchanged.
 
 
+DeepRoad: GAN-based metamorphic testing and input validation framework for autonomous driving systems
+(https://dl.acm.org/doi/pdf/10.1145/3238147.3238187)
+
+A DNN-based autonomous driving system that continuously maps each image into predicted
+steering angle signal (e.g., turning left for 15◦). One MR can be
+defined as given the original image stream I, various image transformations 
+T can simply change the road scenes without impacting the predictions for each 
+image i ∈ I (e.g., the predicted direction should be approximately the same on 
+the same road under different weather conditions).
+
+takes unpaired training images from two target domains (e.g.,
+datasets of the driving scene under sunny and snowy weather respectively), and utilizes UNIT to project two domains to the same
+latent space by optimizing the loss functions. When training done, transform whole dataset of sunny to snowy. Given any image
+under sunny weather i, DeepRoadMT encodes it to vector zi by E1,
+and synthesizes its corresponding version under snowy weather
+τ (i) using G2. DeepRoadMT feeds each pair of real and synthetic
+driving scene images to the autonomous driving systems under
+test, i.e., DN N, and compare their prediction results DN N ⟦τ (i)⟧
+and DN N ⟦i⟧ to detect any inconsistent behaviors.
+
+Input validation part: The goal of input validation (IV) is
+to ensure that only properly formed data can be accepted by systems,
+and malformed data should be rejected before execution, since may trigger malfunction of downstream
+components, which makes the system insecure. We define the IV criteria of DNN-based program based on the
+Probably Approximately Correct (PAC) Learning theory. Intuitively, the IV criteria should be instantiated as:
+Pr_x∼D (x = i) > θ 
+, which means the probability of input i being sampled from D (learned distribution from training set)
+should be greater than the predefined threshold θ. Otherwise, the
+system refuses to predict on i. we project image data
+to a low-dimensional space.
+
+IB(DNN, I) = Σ_(i∈I) f (|DNN ⟦i⟧ − DNN ⟦τ (i)⟧)| > ϵ )
+,where DN N denotes the autonomous driving model and I is the
+real-world driving dataset. i denotes the ith image in I. τ denotes
+the image generator/transformer which can change the weather
+condition of the input image. f is an indicator function which
+outputs 1 or 0 
 
 
 
