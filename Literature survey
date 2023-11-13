@@ -695,7 +695,141 @@ outputs 1 or 0
 
 
 
+DeepTest (operations on pixels):
+First, we leverage
+the notion of neuron coverage (i.e., the number of neurons activated
+by a set of test inputs) to systematically explore different parts of
+the DNN logic. We empirically demonstrate that changes in neuron
+coverage are statistically correlated with changes in the actions of
+self-driving cars (e.g., steering angle). Therefore, neuron coverage
+can be used as a guidance mechanism for systemically exploring
+different types of car behaviors and identify erroneous behaviors.
+Next, we demonstrate that different image transformations that
+mimic real-world differences in driving conditions like changing
+contrast/brightness, rotation of the camera result in activation of
+different sets of neurons in the self-driving car DNNs.
+Finally, we use transformation-specific metamorphic relations between multiple executions of the
+tested DNN (e.g., a car should behave similarly under different
+lighting conditions) to automatically detect erroneous corner case
+behaviors.
 
+we leverage neuron coverage as a
+mechanism for partitioning the input space based on the assumption
+that all inputs that have similar neuron coverage are part of the
+same equivalence class. neuron coverage: the ratio of unique neurons that get activated for given input(s) and
+the total number of neurons in a DNN. 
+
+Similar to the code-coverage-guided testing tools for traditional
+software, DeepTest tries to generate inputs that maximize neuron
+coverage of the test DNN. (For RNNs they unroll)
+
+DeepTest focuses on generating realistic synthetic images by applying image transformations on seed images and mimic
+different real-world phenomena like camera lens distortions, object movements, different weather conditions, etc. To this end, we
+investigate nine different realistic image transformations (changing brightness, changing contrast, translation, scaling, horizontal
+shearing, rotation, blurring, fog effect, and rain effect). These transformations can be classified into three groups: linear, affine, and
+convolutional. 
+An image’s brightness can be adjusted by
+adding/subtracting a constant parameter β to each pixel’s current
+value. One can adjust an image’s contrast by
+multiplying each pixel’s value by a constant parameter α. An affine transformation is usually represented by a 2 × 3 transformation matrix M [6]. One can apply an affine transformation
+to a 2D image matrix I by simply computing the dot product of I
+and M, the corresponding transformation matrix. 
+
+Blurring and adding fog/rain effects are all convolutional transformations, i.e., 
+they perform the convolution operation on the
+input pixels with different transform-specific kernels.  
+A convolution operation adds (weighted by the kernel) each pixel of the input
+image to its local neighbors. We use four different types of blurring
+filters: averaging, Gaussian, median, and bilateral. We compose
+multiple filters provided by Adobe Photoshop on the input images
+to simulate realistic fog and rain effects.
+
+Our results demonstrate that different image transformations tend to activate different neurons, i.e.,
+they can be stacked together to further increase neuron coverage.
+However, the state space of all possible combinations of different
+transformations is too large to explore exhaustively.
+
+ For example, the autonomous car’s steering angle should not change significantly for the same image under any
+lighting/weather conditions, blurring, or any affine transformations
+with small parameter values. 
+
+To minimize false positives, we relax our metamorphic relations
+and allow variations within the error ranges of the original input images. assumes 
+that the errors produced by a model
+for the transformed images as input should be within a range of
+λ times the MSE produced by the original image set. Here, λ is a
+configurable parameter that allows us to strike a balance between
+the false positives and false negatives.
+
+
+BMT: Behavior Driven Development-based
+Metamorphic Testing for Autonomous Driving
+Models (https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9477683)
+
+Behaviour driven -  e.g. a car shall decelerate by x% when a
+bicycle is in front, etc
+
+MR generator -> metamorphic test generator -> MR evaluator
+Domain expert expresses expected driving behaviors in Cucumber with
+syntax similar to natural language. 
+Given those behaviors, the
+
+BDD parser in BMT extracts key elements (e.g., Transformation required) from those behaviors 
+and uses such information to build a corresponding MR.
+
+Once the MR is created, these key elements will then
+be passed to the metamorphic test generator, which has an
+extensible toolkit to implement various transformations required by the behaviors. 
+
+Transformation refers to the change in object(s) such as
+adding objects, removing objects, and changing the time
+to night via generators
+
+Pix2pixHD [23] is an image-to-image translation technique
+proposed by Nvidia for generating images from semantic
+label maps. Given a semantic label map of a driving scene
+image, Pix2pixHD can synthesize a new driving scene image.
+
+UNIT [17] is a technique for image-to-image translation
+based on Generative Adversarial Networks (GANs) and Variational Autoencoders (VAEs). Specifically, UNIT could transfer
+an image from one domain to another such as changing a tiger
+to a lion.
+
+BMT leverages UNIT to transform day-time driving scenes to night-time driving scenes
+
+OpenCV is a powerful open source image processing
+library that provides many affine transformations (e.g., translation and rotation) and complex filter effects (e.g., making
+the image become foggy and rainy). We use it to generate rainy weather
+
+After constructing pairs of source input set and transformed
+follow-up input, the oracle evaluator checks whether the
+corresponding prediction pairs < f(x), f(g(x, o, l)) > have
+the relationship defined by the underlying MR.
+
+
+
+Identifying Implementation Bugs in Machine Learning Based
+Image Classifiers using Metamorphic Testing (https://arxiv.org/pdf/1808.05353.pdf)
+
+SVM and ResNet
+
+Permutations and transformations on images denoted matrices
+
+(1) MR-1: Permutation of input channels (i.e. RGB channels) for
+training and test data
+(2) MR-2: Permutation of the Convolution operation order for
+training and test data
+(3) MR-3: Normalizing the test data
+(4) MR-4: Scaling the test data by a constant
+
+
+DeepHunter
+
+Conservative mutations on coverage guided fuzzing
+
+
+A Programmatic and Semantic Approach to Explaining and Debugging
+Neural Network Based Object Detectors (https://openaccess.thecvf.com/content_CVPR_2020/papers/Kim_A_Programmatic_and_Semantic_Approach_to_Explaining_and_Debugging_Neural_CVPR_2020_paper.pdf)
 
 
 
